@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvg0gb48gxusb"]
+
+[ext_resource type="Texture2D" uid="uid://d2skpgr7rmceb" path="res://Sprites/Shell.png" id="1_ddyeb"]
+
+[node name="RoundUI" type="TextureRect"]
+layout_direction = 3
+texture = ExtResource("1_ddyeb")
+expand_mode = 3
+stretch_mode = 5
