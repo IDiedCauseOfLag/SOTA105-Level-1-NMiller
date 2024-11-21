@@ -12,7 +12,7 @@ public partial class Player : CharacterBody2D
 	public float JumpImpulse = 300;
 	public float PlayerMaxHorizontalSpeed = 400;
 	public float PlayerMaxVerticalSpeed = 1000;
-	public float AccelerationCF = .90f;
+	public float AccelerationCF = .85f;
 	public float ShootImpulseCF = 1000;
 	public override void _Ready()
 	{
