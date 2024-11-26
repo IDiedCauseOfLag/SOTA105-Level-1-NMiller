@@ -19,6 +19,7 @@ config/icon="res://Sprites/icon.svg"
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
+mouse_cursor/custom_image="res://Sprites/Cursors/Cursor3.png"
 
 [dotnet]
 
@@ -71,6 +72,7 @@ ui_reset={
 2d_physics/layer_1="Default"
 2d_physics/layer_2="Hazard"
 2d_physics/layer_3="Player"
+2d_physics/layer_4="Projectile"
 
 [rendering]
 

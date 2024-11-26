@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://rm61o64rf6gj"]
+
+[ext_resource type="PackedScene" uid="uid://b47qxj4qsn5ek" path="res://Scenes/AmmoCountUI.tscn" id="1_5qtwc"]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 1096.0
+offset_top = 512.0
+offset_right = 1136.0
+offset_bottom = 624.0
+color = Color(0.633938, 0.143914, 0.0946478, 0.537255)
+
+[node name="AmmoCountUI" parent="." instance=ExtResource("1_5qtwc")]
+offset_left = -74.0
+offset_top = -120.0
+offset_right = -38.0
+offset_bottom = -36.0

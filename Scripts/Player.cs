@@ -1,12 +1,12 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Reflection.Metadata;
 
 public partial class Player : CharacterBody2D
 {
-	[Export] public int AmmoCount;
 	[Export] public float FireDelay;
-	private SceneTreeTimer FireDelayTimer;
+	public List<AmmoType> SelectedAmmo = new List<AmmoType>();
 	public float Speed = 200;
 	public float GravityCF = 20;
 	public float JumpImpulse = 300;
@@ -14,9 +14,19 @@ public partial class Player : CharacterBody2D
 	public float PlayerMaxVerticalSpeed = 1000;
 	public float AccelerationCF = .85f;
 	public float ShootImpulseCF = 1000;
+	private SceneTreeTimer FireDelayTimer;
+	private int AmmoLoaded;
+	
 	public override void _Ready()
 	{
-		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").InstanceAmmoUI("res://Scenes/RoundUI.tscn", AmmoCount);
+		SelectedAmmo.Add(new AmmoTypeStandard());
+		SelectedAmmo.Add(new AmmoTypeStandard());
+		SelectedAmmo.Add(new AmmoTypeStandard());
+		SelectedAmmo.Add(new AmmoTypeStandard());	
+		SelectedAmmo.Add(new AmmoTypeStandard());
+		SelectedAmmo.Add(new AmmoTypeSlug());
+		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").InstanceAmmoUI("res://Scenes/RoundUI.tscn", SelectedAmmo);
+		AmmoLoaded = SelectedAmmo.Count;
 	}
 	public override void _Process(double delta)
 	{
@@ -49,7 +59,8 @@ public partial class Player : CharacterBody2D
 	private Vector2 UseGun(int AmmoUsed)
 	{
 		if(CanShoot()){
-			AmmoCount -= AmmoUsed;//modifies ammo value
+			SelectedAmmo[AmmoLoaded - 1].ShootAmmo(GlobalPosition, GlobalPosition.DirectionTo(GetGlobalMousePosition()), GetParent());//activates special effect of ammo - shoots projectiles
+			AmmoLoaded -= AmmoUsed;//modifies ammo value
 			GetNode<WeaponAnim>("Weapon").FireAnimation(true);//Runs firing animation
 			GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").UseAmmo(-AmmoUsed);//updates UI
 			FireDelayTimer = GetTree().CreateTimer(FireDelay);//starts firing delay timer;
@@ -61,7 +72,7 @@ public partial class Player : CharacterBody2D
 	}
 	private bool CanShoot()
 	{
-		return Input.IsActionJustPressed("p_shoot") && AmmoCount > 0 && (FireDelayTimer == null || FireDelayTimer.TimeLeft <= 0);
+		return Input.IsActionJustPressed("p_shoot") && AmmoLoaded > 0 && (FireDelayTimer == null || FireDelayTimer.TimeLeft <= 0);
 	}
 	private Vector2 GetImpulseDirection()
 	{
