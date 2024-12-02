@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://df5usjk71vn58"]
+
+[ext_resource type="Texture2D" uid="uid://sndfedxbngrt" path="res://Sprites/Glormbus.png" id="1_piutt"]
+[ext_resource type="Script" path="res://Scripts/Enemy.cs" id="1_skhr2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ont4n"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_es36h"]
+atlas = ExtResource("1_piutt")
+region = Rect2(0, 0, 21, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tbnkt"]
+atlas = ExtResource("1_piutt")
+region = Rect2(21, 0, 21, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xwbqf"]
+atlas = ExtResource("1_piutt")
+region = Rect2(42, 0, 21, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5c48a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_es36h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tbnkt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_es36h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xwbqf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 18
+script = ExtResource("1_skhr2")
+EngagementDistance = 500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ont4n")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_5c48a")
+autoplay = "default"
+frame_progress = 0.682456

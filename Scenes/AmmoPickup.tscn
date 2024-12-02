@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0a16coxu63y5"]
+
+[ext_resource type="Script" path="res://Scripts/AmmoPickup.cs" id="1_j6v5k"]
+[ext_resource type="Texture2D" uid="uid://cw5n2kxwttnit" path="res://Sprites/AmmoPickup.png" id="2_p23ao"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tjxlu"]
+
+[node name="AmmoPickup" type="Area2D"]
+collision_mask = 4
+script = ExtResource("1_j6v5k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_tjxlu")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_p23ao")
+
+[connection signal="body_entered" from="." to="." method="OnPlayerEnter"]

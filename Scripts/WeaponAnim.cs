@@ -15,5 +15,15 @@ public partial class WeaponAnim : AnimatedSprite2D
 	{
 		if(CanShoot){Stop();Play("Fire");}
 	}
-	
+	public void OnFrameCallAudio()
+	{
+		if(Frame == 5 && Animation == "Fire")
+		{
+			GetNode<AudioPlayer>("../AudioStreamPlayer2D").PlayAudio(0);
+		}
+		else if(Frame == 1 && Animation == "Fire")
+		{
+			GetNode<AudioPlayer>("../AudioStreamPlayer2D2").PlayAudio(1);
+		}
+	}	
 }

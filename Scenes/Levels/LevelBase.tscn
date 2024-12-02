@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b141r5y7ii5rn" path="res://Sprites/Backgrounds/TempBackground2.png" id="4_kwvor"]
 [ext_resource type="PackedScene" uid="uid://dpq4wejjuhntu" path="res://Scenes/Player.tscn" id="4_yo3tf"]
 [ext_resource type="PackedScene" uid="uid://cq2d1uyhpt5xs" path="res://Scenes/LevelEnd.tscn" id="6_b1ver"]
-[ext_resource type="PackedScene" uid="uid://rm61o64rf6gj" path="res://Scenes/UI.tscn" id="7_gd5ai"]
+[ext_resource type="PackedScene" uid="uid://rm61o64rf6gj" path="res://Scenes/UIScenes/UI.tscn" id="7_gd5ai"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_48rks"]
 texture = ExtResource("2_xex78")

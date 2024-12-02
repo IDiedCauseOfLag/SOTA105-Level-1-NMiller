@@ -8,8 +8,9 @@ public partial class AmmoUI : HBoxContainer
 	private PackedScene IndicatorSceneRef;
 	private int UIAmmoCount;
 	// Called when the node enters the scene tree for the first time.
+
 	public AmmoUI InstanceAmmoUI(string SceneRef, List<AmmoType> LoadedAmmo)
-	{
+	{ 
 		UIAmmoCount = LoadedAmmo.Count;
 		IndicatorSceneRef = GD.Load<PackedScene>(SceneRef);
 		AmmoIndicators = PopulateAmmoUI(LoadedAmmo.Count, LoadedAmmo);
@@ -26,14 +27,18 @@ public partial class AmmoUI : HBoxContainer
 			return Ammo;
 		}
 	}
-	public bool UseAmmo(int AmmoUsed) //Updates Ammo display. returns true if successful. returns false if not enough ammo
+	public void UseAmmo(int AmmoUsed) //Updates Ammo display. fuck this goddamn function 
 	{
-		if(AmmoUsed == 0){return true;}
-		if(UIAmmoCount == 0){return false;}
-		else{
-			UIAmmoCount += Util.IntToPN(AmmoUsed);
-			AmmoIndicators[UIAmmoCount].Visible = !AmmoIndicators[UIAmmoCount].Visible;
-			return UseAmmo(AmmoUsed - Util.IntToPN(AmmoUsed));
-		}	
-	}
+		if(AmmoUsed < 0){
+			for (int i = 0; i < Mathf.Abs(AmmoUsed) && i > -Mathf.Abs(AmmoUsed); i += Util.IntToPN(AmmoUsed)){
+				AmmoIndicators[UIAmmoCount + i + Util.IntToPN(AmmoUsed)].Visible = !AmmoIndicators[UIAmmoCount + i + Util.IntToPN(AmmoUsed)].Visible;
+			}
+		}
+		else if(AmmoUsed > 0){
+			for (int i = 0; i < Mathf.Abs(AmmoUsed) && i > -Mathf.Abs(AmmoUsed); i += Util.IntToPN(AmmoUsed)){
+				AmmoIndicators[UIAmmoCount - 1 + i + Util.IntToPN(AmmoUsed)].Visible = !AmmoIndicators[UIAmmoCount - 1 + i + Util.IntToPN(AmmoUsed)].Visible;
+			}
+		}
+		UIAmmoCount += AmmoUsed;
+	}//I want to cry
 }

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b47qxj4qsn5ek"]
 
-[ext_resource type="Script" path="res://Scripts/AmmoUI.cs" id="1_col1y"]
+[ext_resource type="Script" path="res://Scripts/UIScripts/AmmoUI.cs" id="1_cnl8h"]
 
 [node name="AmmoCountUI" type="HBoxContainer"]
 layout_direction = 2
@@ -14,4 +14,4 @@ offset_top = -40.0
 grow_horizontal = 0
 grow_vertical = 0
 alignment = 2
-script = ExtResource("1_col1y")
+script = ExtResource("1_cnl8h")

@@ -5,27 +5,27 @@ using System.Reflection.Metadata;
 
 public partial class Player : CharacterBody2D
 {
-	[Export] public float FireDelay;
-	public List<AmmoType> SelectedAmmo = new List<AmmoType>();
-	public float Speed = 200;
-	public float GravityCF = 20;
-	public float JumpImpulse = 300;
-	public float PlayerMaxHorizontalSpeed = 400;
-	public float PlayerMaxVerticalSpeed = 1000;
-	public float AccelerationCF = .85f;
-	public float ShootImpulseCF = 1000;
-	private SceneTreeTimer FireDelayTimer;
-	private int AmmoLoaded;
+	[Export] public int AmmoCount; //Determines max rounds in gun - used for instantiating ui
+	[Export] public float FireDelay; //firerate cap - should operate independently from animation speed
+	public List<AmmoType> SelectedAmmo = new List<AmmoType>(); //list of ammo types loaded into the gun. filled from menu
+	public int AmmoLoaded;//the actual rounds remaining
+	public float Speed = 200; //players speed
+	public float GravityCF = 20; // strength of gravity
+	public float JumpImpulse = 300; //jump strength
+	public float PlayerMaxHorizontalSpeed = 400; //max speed of player
+	public float PlayerMaxVerticalSpeed = 1000; // function the terminal velocity of player
+	public float AccelerationCF = .85f; // determines the sensitivity of aerial control
+	private SceneTreeTimer FireDelayTimer; //reference for firing delay timer
+	
 	
 	public override void _Ready()
 	{
-		SelectedAmmo.Add(new AmmoTypeStandard());
-		SelectedAmmo.Add(new AmmoTypeStandard());
-		SelectedAmmo.Add(new AmmoTypeStandard());
-		SelectedAmmo.Add(new AmmoTypeStandard());	
-		SelectedAmmo.Add(new AmmoTypeStandard());
-		SelectedAmmo.Add(new AmmoTypeSlug());
-		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").InstanceAmmoUI("res://Scenes/RoundUI.tscn", SelectedAmmo);
+		GetNode<AmmoSelection>("../CanvasLayer/AmmoPicker").InstanceAmmoPicker(AmmoCount);
+	}
+	public void OnLevelStartInstanceUI(List<AmmoType> LoadedAmmo)
+	{
+		SelectedAmmo = LoadedAmmo;
+		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").InstanceAmmoUI("res://Scenes/UIScenes/RoundUI.tscn", SelectedAmmo);
 		AmmoLoaded = SelectedAmmo.Count;
 	}
 	public override void _Process(double delta)
@@ -34,7 +34,7 @@ public partial class Player : CharacterBody2D
     public override void _PhysicsProcess(double delta)
     {
 		Velocity = GetMovementVector(CheckKeyPress());
-		Velocity += UseGun(Util.BoolToInt(CanShoot())) * ShootImpulseCF;	
+		Velocity += UseGun(Util.BoolToInt(CanShoot()));	
 		MoveAndSlide();
     }
 	private Vector2 CheckKeyPress()
@@ -59,16 +59,21 @@ public partial class Player : CharacterBody2D
 	private Vector2 UseGun(int AmmoUsed)
 	{
 		if(CanShoot()){
-			SelectedAmmo[AmmoLoaded - 1].ShootAmmo(GlobalPosition, GlobalPosition.DirectionTo(GetGlobalMousePosition()), GetParent());//activates special effect of ammo - shoots projectiles
-			AmmoLoaded -= AmmoUsed;//modifies ammo value
+			OnFireData ShotData = SelectedAmmo[AmmoLoaded - 1].ShootAmmo(GlobalPosition, GlobalPosition.DirectionTo(GetGlobalMousePosition()), GetParent());//activates special effect of ammo - shoots projectiles
+			UseAmmo(AmmoUsed);//behavior for decreasing ammo count and updating ui
 			GetNode<WeaponAnim>("Weapon").FireAnimation(true);//Runs firing animation
-			GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").UseAmmo(-AmmoUsed);//updates UI
 			FireDelayTimer = GetTree().CreateTimer(FireDelay);//starts firing delay timer;
-			return GetImpulseDirection();
+			return GetImpulseDirection() * ShotData.RecoilImpulse;
 		}
 		else{
 			return Vector2.Zero;
 		}
+	}
+	public void UseAmmo(int AmmoUsed)
+	{
+		AmmoLoaded -= AmmoUsed;//modifies ammo value
+		AmmoLoaded = Mathf.Clamp(AmmoLoaded, 0, SelectedAmmo.Count);//ensures that ammo is not above the max ammo or below the min ammo
+		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").UseAmmo(-AmmoUsed);//updates UI
 	}
 	private bool CanShoot()
 	{
@@ -86,6 +91,6 @@ public partial class Player : CharacterBody2D
 	}
 	public void DeathAnimFinish()
 	{
-		if(GetNode<AnimatedSprite2D>("AnimatedSprite2D").Animation == "Death"){GetNode<Game>("../").ResetGame();}
+		if(GetNode<AnimatedSprite2D>("AnimatedSprite2D").Animation == "Death"){GetNode<Game>("../").ResetGame();}//recieves signal from animation notifying when animation is finished
 	}
 }

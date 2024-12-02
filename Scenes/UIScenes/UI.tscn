@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://rm61o64rf6gj"]
+[gd_scene load_steps=3 format=3 uid="uid://rm61o64rf6gj"]
 
-[ext_resource type="PackedScene" uid="uid://b47qxj4qsn5ek" path="res://Scenes/AmmoCountUI.tscn" id="1_5qtwc"]
+[ext_resource type="PackedScene" uid="uid://b47qxj4qsn5ek" path="res://Scenes/UIScenes/AmmoCountUI.tscn" id="1_5qtwc"]
+[ext_resource type="PackedScene" uid="uid://cevt0sc1yxmgp" path="res://Scenes/UIScenes/AmmoPicker.tscn" id="2_qm5cs"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -16,3 +17,5 @@ offset_left = -74.0
 offset_top = -120.0
 offset_right = -38.0
 offset_bottom = -36.0
+
+[node name="AmmoPicker" parent="." instance=ExtResource("2_qm5cs")]

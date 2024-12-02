@@ -25,6 +25,17 @@ mouse_cursor/custom_image="res://Sprites/Cursors/Cursor3.png"
 
 project/assembly_name="Sota 105-level-1"
 
+[file_customization]
+
+folder_colors={
+"res://Scenes/": "pink",
+"res://Scripts/": "blue",
+"res://Scripts/AmmoTypes/": "orange",
+"res://Scripts/AmmoTypes/ImplementedAmmoTypes/": "purple",
+"res://Scripts/UIScripts/": "green",
+"res://Sprites/": "green"
+}
+
 [input]
 
 p_right={
@@ -73,6 +84,7 @@ ui_reset={
 2d_physics/layer_2="Hazard"
 2d_physics/layer_3="Player"
 2d_physics/layer_4="Projectile"
+2d_physics/layer_5="Enemy"
 
 [rendering]
 
