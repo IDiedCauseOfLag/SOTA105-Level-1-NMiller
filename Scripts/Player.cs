@@ -21,6 +21,7 @@ public partial class Player : CharacterBody2D
 	public override void _Ready()
 	{
 		GetNode<AmmoSelection>("../CanvasLayer/AmmoPicker").InstanceAmmoPicker(AmmoCount);
+		GetNode<AudioPlayer>("AudioPlayerMusic").PlayAudio(0);
 	}
 	public void OnLevelStartInstanceUI(List<AmmoType> LoadedAmmo)
 	{
@@ -37,7 +38,7 @@ public partial class Player : CharacterBody2D
 		Velocity += UseGun(Util.BoolToInt(CanShoot()));	
 		MoveAndSlide();
     }
-	private Vector2 CheckKeyPress()
+	public Vector2 CheckKeyPress()
 	{
 		return new Vector2(Input.GetAxis("p_left", "p_right"), GetJump());
 	}

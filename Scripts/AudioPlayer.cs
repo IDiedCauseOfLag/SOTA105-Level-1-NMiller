@@ -2,29 +2,26 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class AudioPlayer : AudioStreamPlayer2D
+public partial class AudioPlayer : AudioStreamPlayer2D //class containing multiple audio files to play
 {
-	[Export] Godot.Collections.Array<string> LoadSounds; 
-	private List<AudioStream> AudioFiles = new List<AudioStream>();
-	// Called when the node enters the scene tree for the first time.
+	[Export] Godot.Collections.Array<string> LoadSounds;
+	[Export] public bool Looping;
+	internal List<AudioStream> AudioFiles = new List<AudioStream>();
 	public override void _Ready()
 	{
 		for(int i = 0; i < LoadSounds.Count; i++)
 		{
 			AudioFiles.Add(GD.Load<AudioStream>(LoadSounds[i]));
 		}
-		
-
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
 	}
 	public void PlayAudio(int AudioIndex)
 	{
 		Stream = AudioFiles[AudioIndex];
 		Play();
+	}
+	public void Loop()
+	{
+		if(Looping){PlayAudio(0);}
 	}
 	
 }
