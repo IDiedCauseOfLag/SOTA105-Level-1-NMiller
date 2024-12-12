@@ -13,9 +13,9 @@ public partial class UIKeyInputs : Node2D
 		if(Input.IsActionJustPressed("ui_close_window")){GetTree().Quit();}
 		if(Input.IsActionJustPressed("ui_reset")){ResetGame();}
 	}
-	public Error ResetGame()
+	public void ResetGame()
 	{
-		return GetTree().ReloadCurrentScene();
+		Global.Instance.GoToScene(GetTree().CurrentScene.SceneFilePath);
 	}
 	
 	public void ToggleFullscreen()

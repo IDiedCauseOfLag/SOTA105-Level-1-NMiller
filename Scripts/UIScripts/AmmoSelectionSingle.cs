@@ -5,7 +5,7 @@ public partial class AmmoSelectionSingle : Control
 {
 	private List<AmmoType> AmmoTypesRef = new List<AmmoType>();
 	private int SelectedIndex = 0;
-	public override void _Ready()
+	public void InstanceAmmoSelector()
 	{
 		string[] AmmoTypes = DirAccess.GetFilesAt("res://Scripts/AmmoTypes/ImplementedAmmoTypes/");
 		foreach(String ClassName in AmmoTypes)

@@ -14,11 +14,12 @@ public partial class AudioPlayer : AudioStreamPlayer2D //class containing multip
 			AudioFiles.Add(GD.Load<AudioStream>(LoadSounds[i]));
 		}
 	}
-	public void PlayAudio(int AudioIndex)
+	public void PlayAudio(int AudioIndex, float FromPosition = 0)
 	{
 		Stream = AudioFiles[AudioIndex];
-		Play();
+		Play(FromPosition);
 	}
+	
 	public void Loop()
 	{
 		if(Looping){PlayAudio(0);}

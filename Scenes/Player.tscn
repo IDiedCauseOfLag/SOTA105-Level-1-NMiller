@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://dpq4wejjuhntu"]
+[gd_scene load_steps=33 format=3 uid="uid://dpq4wejjuhntu"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_7pjuk"]
 [ext_resource type="Texture2D" uid="uid://fafvprcttanl" path="res://Sprites/Gary.png" id="2_b1j56"]
@@ -6,7 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://cb7oy1htwbwvi" path="res://Sprites/ShotgunAnimation.png" id="4_yekxa"]
 [ext_resource type="Script" path="res://Scripts/WeaponAnim.cs" id="5_fysnh"]
 [ext_resource type="PackedScene" uid="uid://6c61oys8et3k" path="res://Scenes/AudioPlayer.tscn" id="6_aa4we"]
-[ext_resource type="Script" path="res://Scripts/FootstepPlayer.cs" id="7_aahil"]
+[ext_resource type="Script" path="res://Scripts/AudioScripts/FootstepPlayer.cs" id="7_rh6u5"]
+[ext_resource type="Script" path="res://Scripts/AudioScripts/MusicPlayer.cs" id="8_k3u5a"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tq7ax"]
 size = Vector2(15, 15)
@@ -32,6 +33,9 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ar3ht"]
+size = Vector2(14, 16)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ov7ar"]
 radius = 8.0
@@ -195,6 +199,13 @@ shape = SubResource("RectangleShape2D_tq7ax")
 sprite_frames = SubResource("SpriteFrames_a175v")
 animation = &"Death"
 
+[node name="Jump" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Jump"]
+position = Vector2(0, 14)
+shape = SubResource("RectangleShape2D_ar3ht")
+
 [node name="Interaction" type="Area2D" parent="."]
 collision_mask = 2
 
@@ -224,15 +235,17 @@ LoadSounds = ["res://Sounds/544675__clueless79__shotgun-03.wav"]
 
 [node name="AudioPlayerFootstep" parent="." instance=ExtResource("6_aa4we")]
 volume_db = 5.0
-script = ExtResource("7_aahil")
+script = ExtResource("7_rh6u5")
 LoadSounds = ["res://Sounds/step_lth33.ogg", "res://Sounds/step_lth4.ogg", "res://Sounds/step_lth2.ogg", "res://Sounds/step_lth1.ogg"]
 
 [node name="AudioPlayerMusic" parent="." instance=ExtResource("6_aa4we")]
+process_mode = 3
 volume_db = 0.0
-autoplay = true
+script = ExtResource("8_k3u5a")
 LoadSounds = ["res://Sounds/FeralAngelWaltz.mp3"]
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="DeathAnimFinish"]
 [connection signal="body_entered" from="Interaction" to="." method="OnHazardEntered"]
 [connection signal="frame_changed" from="Weapon" to="Weapon" method="OnFrameCallAudio"]
 [connection signal="finished" from="AudioPlayerFootstep" to="AudioPlayerFootstep" method="PlayFootstepAudio"]
+[connection signal="tree_exiting" from="AudioPlayerMusic" to="AudioPlayerMusic" method="OnQueueFree"]

@@ -11,8 +11,8 @@ public partial class AmmoTypeSlug : AmmoType
 		AmmoName = "Slugs";
 		ProjectileSpeed = 1000;
 	}
-    public override OnFireData ShootAmmo(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
-    {
+	public override OnFireData ShootAmmo(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
+	{
 		SpawnProjectile(FiringOrigin, FiringDirection, ProjectileParent);
 		return new OnFireData(1100);
 	}

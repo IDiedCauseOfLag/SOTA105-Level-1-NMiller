@@ -9,19 +9,19 @@ public partial class Player : CharacterBody2D
 	[Export] public float FireDelay; //firerate cap - should operate independently from animation speed
 	public List<AmmoType> SelectedAmmo = new List<AmmoType>(); //list of ammo types loaded into the gun. filled from menu
 	public int AmmoLoaded;//the actual rounds remaining
-	public float Speed = 200; //players speed
+	public float Speed = 140; //players speed
 	public float GravityCF = 20; // strength of gravity
 	public float JumpImpulse = 300; //jump strength
-	public float PlayerMaxHorizontalSpeed = 400; //max speed of player
+	public float PlayerMaxHorizontalSpeed = 10000; //max speed of player
 	public float PlayerMaxVerticalSpeed = 1000; // function the terminal velocity of player
-	public float AccelerationCF = .85f; // determines the sensitivity of aerial control
+	public float AccelerationCF = .6f; // determines the sensitivity of aerial control
 	private SceneTreeTimer FireDelayTimer; //reference for firing delay timer
 	
 	
 	public override void _Ready()
 	{
 		GetNode<AmmoSelection>("../CanvasLayer/AmmoPicker").InstanceAmmoPicker(AmmoCount);
-		GetNode<AudioPlayer>("AudioPlayerMusic").PlayAudio(0);
+		//GetNode<AudioPlayer>("AudioPlayerMusic").PlayAudio(0);
 	}
 	public void OnLevelStartInstanceUI(List<AmmoType> LoadedAmmo)
 	{
@@ -31,29 +31,31 @@ public partial class Player : CharacterBody2D
 	}
 	public override void _Process(double delta)
 	{
+		
 	}
-    public override void _PhysicsProcess(double delta)
-    {
+	public override void _PhysicsProcess(double delta)
+	{
 		Velocity = GetMovementVector(CheckKeyPress());
 		Velocity += UseGun(Util.BoolToInt(CanShoot()));	
 		MoveAndSlide();
-    }
+	}
 	public Vector2 CheckKeyPress()
 	{
 		return new Vector2(Input.GetAxis("p_left", "p_right"), GetJump());
 	}
 	private float GetJump()
 	{
-		return Util.BoolToInt(Input.IsActionJustPressed("p_jump") && IsOnFloor());
+		//GD.Print("jump: " + CanJump() + " Floor: " + IsOnFloor());
+		return Util.BoolToInt(Input.IsActionJustPressed("p_jump") && CanJump());
 	}
 	private float GetGravity()
 	{
 		return Util.BoolToInt(!IsOnFloor()) * GravityCF;
 	}
-	private Vector2 GetMovementVector(Vector2 KeyInput)
+	private Vector2 GetMovementVector(Vector2 KeyInput)  
 	{
 		KeyInput.X = Mathf.Clamp(Velocity.X * Util.BoolToInt(!IsOnFloor()) * AccelerationCF + KeyInput.X * Speed, -PlayerMaxHorizontalSpeed, PlayerMaxHorizontalSpeed);
-		KeyInput.Y = Mathf.Clamp(Velocity.Y + KeyInput.Y * -JumpImpulse + GetGravity(), -PlayerMaxVerticalSpeed, PlayerMaxVerticalSpeed);
+		KeyInput.Y = Mathf.Clamp(Velocity.Y * Util.BoolToInt(!Util.IntToBool((int)KeyInput.Y)) + KeyInput.Y * -JumpImpulse + GetGravity(), -PlayerMaxVerticalSpeed, PlayerMaxVerticalSpeed);
 		if(KeyInput.Y < 0 && Input.IsActionJustReleased("p_jump")){KeyInput /= 2;}
 		return KeyInput;
 	}
@@ -79,6 +81,10 @@ public partial class Player : CharacterBody2D
 	private bool CanShoot()
 	{
 		return Input.IsActionJustPressed("p_shoot") && AmmoLoaded > 0 && (FireDelayTimer == null || FireDelayTimer.TimeLeft <= 0);
+	}
+	private bool CanJump()
+	{
+		return GetNode<Area2D>("Jump").HasOverlappingBodies();
 	}
 	private Vector2 GetImpulseDirection()
 	{

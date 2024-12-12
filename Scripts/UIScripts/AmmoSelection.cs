@@ -15,6 +15,20 @@ public partial class AmmoSelection : Control
 		{
 			AmmoSelectors.Add(IndividualAmmoPickerRef.Instantiate<AmmoSelectionSingle>());
 			Container.AddChild(AmmoSelectors[i]);
+			AmmoSelectors[i].InstanceAmmoSelector();
+		}
+		RetrieveLastAmmoSelection(Global.AmmoTypeIndexes);
+	}
+	private void RetrieveLastAmmoSelection(List<int> Indices)
+	{
+		if(Indices == null)
+		{		
+			Indices = new List<int>(){1,1,1,1,1,1}; //so wow
+		}
+		for(int i = 0; i < AmmoSelectors.Count; i++)
+		{
+			AmmoSelectors[i].GetNode<OptionButton>("OptionButton").Selected = Indices[i];
+			AmmoSelectors[i].OnAmmoSelect(Indices[i]);
 		}
 	}
 	public void OnStartLevelDown()
@@ -22,11 +36,14 @@ public partial class AmmoSelection : Control
 		GetTree().Paused = false;
 		Visible = false;
 		List<AmmoType> LoadedAmmo = new List<AmmoType>();
+		Global.AmmoTypeIndexes = new List<int>();
 		foreach(AmmoSelectionSingle AmmoSelector in AmmoSelectors)
 		{
 			LoadedAmmo.Add(AmmoSelector.ReturnSelectedAmmo());
+			Global.AmmoTypeIndexes.Add(AmmoSelector.GetNode<OptionButton>("OptionButton").Selected);
 		}
 		GetNode<Player>("../../Player").OnLevelStartInstanceUI(LoadedAmmo);
+		
 
 	}
 }

@@ -18,7 +18,7 @@ public partial class AmmoUI : HBoxContainer
 	}
 	private List<TextureRect> PopulateAmmoUI(int AmmoCount, List<AmmoType> LoadedAmmoTypes)
 	{
-		if(Util.IntToBool(AmmoCount)){return new List<TextureRect>();}
+		if(AmmoCount == 0){return new List<TextureRect>();}
 		else{
 			List<TextureRect> Ammo = PopulateAmmoUI(AmmoCount - 1, LoadedAmmoTypes);
 			Ammo.Add((TextureRect)IndicatorSceneRef.Instantiate());

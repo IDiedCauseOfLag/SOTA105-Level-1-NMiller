@@ -10,7 +10,7 @@ public static class Util
 	}
 	public static bool IntToBool(int i)
 	{
-		return i == 0;
+		return i == 1;
 	}
 	public static int IntToPN(int i)
 	{

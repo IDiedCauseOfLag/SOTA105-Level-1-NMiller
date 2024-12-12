@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bky8o6bf17us4"]
+
+[ext_resource type="Script" path="res://Scripts/AmmoSpawner.cs" id="1_b1xvm"]
+
+[node name="AmmoSpawner" type="Node2D"]
+position = Vector2(-384, 288)
+script = ExtResource("1_b1xvm")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="SpawnNewAmmoPickup"]

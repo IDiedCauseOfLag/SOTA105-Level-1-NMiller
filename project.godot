@@ -15,6 +15,10 @@ run/main_scene="res://Scenes/Levels/Level1.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://Sprites/icon.svg"
 
+[autoload]
+
+Global="*res://Scripts/Global.cs"
+
 [display]
 
 window/stretch/mode="canvas_items"
