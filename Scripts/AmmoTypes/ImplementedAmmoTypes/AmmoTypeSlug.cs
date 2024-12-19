@@ -10,10 +10,11 @@ public partial class AmmoTypeSlug : AmmoType
 		AmmoIndicatorSprite = GD.Load<Texture2D>("res://Sprites/AmmoTypeIndicators/Slug.png");
 		AmmoName = "Slugs";
 		ProjectileSpeed = 1000;
+		RecoilImpulse = new Vector2(500, 500);
 	}
 	public override OnFireData ShootAmmo(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
 	{
 		SpawnProjectile(FiringOrigin, FiringDirection, ProjectileParent);
-		return new OnFireData(1100);
+		return new OnFireData(RecoilImpulse);
 	}
 }

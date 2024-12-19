@@ -19,3 +19,7 @@ offset_right = -38.0
 offset_bottom = -36.0
 
 [node name="AmmoPicker" parent="." instance=ExtResource("2_qm5cs")]
+
+[node name="Velocity" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

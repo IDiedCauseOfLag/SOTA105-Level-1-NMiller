@@ -10,18 +10,20 @@ public partial class Player : CharacterBody2D
 	public List<AmmoType> SelectedAmmo = new List<AmmoType>(); //list of ammo types loaded into the gun. filled from menu
 	public int AmmoLoaded;//the actual rounds remaining
 	public float Speed = 140; //players speed
-	public float GravityCF = 20; // strength of gravity
-	public float JumpImpulse = 300; //jump strength
-	public float PlayerMaxHorizontalSpeed = 10000; //max speed of player
-	public float PlayerMaxVerticalSpeed = 1000; // function the terminal velocity of player
-	public float AccelerationCF = .6f; // determines the sensitivity of aerial control
+	public float GravityCF = 15; // strength of gravity
+	private float VerticalIncreaseResistance = 2; //determines how much gravity effecs the player when moving up. also determines verticle speed
+	public float JumpImpulse = 250; //jump strength
+	public float PlayerMaxHorizontalSpeed = 300; //max speed of player achievable by self propulsion
+	public float PlayerMaxVerticalSpeed = 700; //terminal velocity of player
+	public float Acceleration = 40; 
+	public float Deceleration = 20;
 	private SceneTreeTimer FireDelayTimer; //reference for firing delay timer
 	
 	
 	public override void _Ready()
 	{
 		GetNode<AmmoSelection>("../CanvasLayer/AmmoPicker").InstanceAmmoPicker(AmmoCount);
-		//GetNode<AudioPlayer>("AudioPlayerMusic").PlayAudio(0);
+		//GetNode<AudioPlayer>("AudioPlayerMusic").PlayAudio(0); //plays music. comment out to disable
 	}
 	public void OnLevelStartInstanceUI(List<AmmoType> LoadedAmmo)
 	{
@@ -31,6 +33,12 @@ public partial class Player : CharacterBody2D
 	}
 	public override void _Process(double delta)
 	{
+		GetNode<Label>("/root/Game/CanvasLayer/Velocity").Text = "" + Velocity;
+		if(IsOnFloor() != IsGrounded())
+		{
+			GD.Print("TimerTest");
+		}
+		GD.Print(GetNode<Timer>("BHopGracePeriod").TimeLeft);
 		
 	}
 	public override void _PhysicsProcess(double delta)
@@ -43,20 +51,16 @@ public partial class Player : CharacterBody2D
 	{
 		return new Vector2(Input.GetAxis("p_left", "p_right"), GetJump());
 	}
-	private float GetJump()
-	{
-		//GD.Print("jump: " + CanJump() + " Floor: " + IsOnFloor());
-		return Util.BoolToInt(Input.IsActionJustPressed("p_jump") && CanJump());
-	}
-	private float GetGravity()
-	{
-		return Util.BoolToInt(!IsOnFloor()) * GravityCF;
-	}
 	private Vector2 GetMovementVector(Vector2 KeyInput)  
 	{
-		KeyInput.X = Mathf.Clamp(Velocity.X * Util.BoolToInt(!IsOnFloor()) * AccelerationCF + KeyInput.X * Speed, -PlayerMaxHorizontalSpeed, PlayerMaxHorizontalSpeed);
+		if(IsGrounded()){
+			KeyInput.X = KeyInput.X * Speed;
+		}else{
+			KeyInput.X = Velocity.X + Util.ClampDelta(Velocity.X, KeyInput.X * Acceleration, PlayerMaxHorizontalSpeed, -PlayerMaxHorizontalSpeed) - Util.BoolToInt(KeyInput.X == 0) * Deceleration * Util.IntToPN((int)Velocity.X);
+		}
+		//KeyInput.X = Velocity.X * Util.BoolToInt(!IsOnFloor()) * Acceleration + KeyInput.X * Speed;
 		KeyInput.Y = Mathf.Clamp(Velocity.Y * Util.BoolToInt(!Util.IntToBool((int)KeyInput.Y)) + KeyInput.Y * -JumpImpulse + GetGravity(), -PlayerMaxVerticalSpeed, PlayerMaxVerticalSpeed);
-		if(KeyInput.Y < 0 && Input.IsActionJustReleased("p_jump")){KeyInput /= 2;}
+		if(KeyInput.Y < 0 && Input.IsActionJustReleased("p_jump")){KeyInput.Y /= 2;}
 		return KeyInput;
 	}
 	private Vector2 UseGun(int AmmoUsed)
@@ -78,6 +82,24 @@ public partial class Player : CharacterBody2D
 		AmmoLoaded = Mathf.Clamp(AmmoLoaded, 0, SelectedAmmo.Count);//ensures that ammo is not above the max ammo or below the min ammo
 		GetNode<AmmoUI>("../CanvasLayer/AmmoCountUI").UseAmmo(-AmmoUsed);//updates UI
 	}
+	private float GetJump()
+	{
+		return Util.BoolToInt(Input.IsActionJustPressed("p_jump") && CanJump());
+	}
+	private bool IsGrounded()
+	{
+		Timer GroundedTimer = GetNode<Timer>("BHopGracePeriod");
+		if(!IsOnFloor()){
+			GroundedTimer.Start(0);
+		}
+		return IsOnFloor() && GroundedTimer.TimeLeft == 0;
+	}
+	
+	private float GetGravity()
+	{
+		return Util.BoolToInt(!IsOnFloor()) * GravityCF - (VerticalIncreaseResistance * Util.BoolToInt(Velocity.Y < 0));
+	}
+
 	private bool CanShoot()
 	{
 		return Input.IsActionJustPressed("p_shoot") && AmmoLoaded > 0 && (FireDelayTimer == null || FireDelayTimer.TimeLeft <= 0);

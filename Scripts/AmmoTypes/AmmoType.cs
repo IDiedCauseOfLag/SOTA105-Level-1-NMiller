@@ -8,7 +8,7 @@ public partial class AmmoType
 	internal float ProjectileDeviation = 0;
 	internal PackedScene ProjectileRef;
 	internal int ProjectileCount = 1;
-	internal int RecoilImpulse = 1000;
+	internal Vector2 RecoilImpulse = new Vector2(200, 600);
 	internal float ProjectileSpeed = 500;
 	public AmmoType()
 	{
@@ -17,7 +17,7 @@ public partial class AmmoType
 	public virtual OnFireData ShootAmmo(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
 	{
 		GD.Print("you shot a blank - you probably forgot to write out the function for shooting");
-		return new OnFireData(0);
+		return new OnFireData(Vector2.One);
 	}
 	public void SpawnProjectile(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
 	{

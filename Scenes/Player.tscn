@@ -35,7 +35,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ar3ht"]
-size = Vector2(14, 16)
+size = Vector2(14, 14)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ov7ar"]
 radius = 8.0
@@ -203,7 +203,7 @@ animation = &"Death"
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jump"]
-position = Vector2(0, 14)
+position = Vector2(0, 13)
 shape = SubResource("RectangleShape2D_ar3ht")
 
 [node name="Interaction" type="Area2D" parent="."]
@@ -243,6 +243,10 @@ process_mode = 3
 volume_db = 0.0
 script = ExtResource("8_k3u5a")
 LoadSounds = ["res://Sounds/FeralAngelWaltz.mp3"]
+
+[node name="BHopGracePeriod" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="DeathAnimFinish"]
 [connection signal="body_entered" from="Interaction" to="." method="OnHazardEntered"]

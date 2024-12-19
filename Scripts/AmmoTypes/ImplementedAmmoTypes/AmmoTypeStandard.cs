@@ -17,6 +17,6 @@ public partial class AmmoTypeStandard : AmmoType
 		{
 			SpawnProjectile(FiringOrigin, FiringDirection.Rotated(Mathf.DegToRad(ProjectileDeviation - i*(ProjectileDeviation*2/(ProjectileCount-1)))), ProjectileParent);
 		}
-		return new OnFireData(1000);
+		return new OnFireData(RecoilImpulse);
 	}
 }

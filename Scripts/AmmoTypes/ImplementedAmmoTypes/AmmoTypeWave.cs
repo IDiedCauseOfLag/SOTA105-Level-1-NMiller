@@ -9,6 +9,7 @@ public partial class AmmoTypeWave : AmmoType
 		ProjectileCount = 200;
 		AmmoIndicatorSprite = GD.Load<Texture2D>("res://Sprites/AmmoTypeIndicators/Wave.png");
 		AmmoName = "Waveshot";
+		RecoilImpulse = new Vector2(100, 700);
 	}
     public override OnFireData ShootAmmo(Vector2 FiringOrigin, Vector2 FiringDirection, Node ProjectileParent)
     {
@@ -16,6 +17,6 @@ public partial class AmmoTypeWave : AmmoType
 		{
 			SpawnProjectile(FiringOrigin, FiringDirection.Rotated(Mathf.DegToRad(ProjectileDeviation - i*(ProjectileDeviation*2/(ProjectileCount-1)))), ProjectileParent);
 		}
-		return new OnFireData(700);
+		return new OnFireData(RecoilImpulse);
 	}
 }
